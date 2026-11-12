@@ -2,14 +2,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChitFund Pro - Monthwise Non-Prized Member Profit Calculator</title>
+    <title>ChitFund Pro - Monthwise Non-Prized Member Cumulative Profit Calculator</title>
     <style>
         :root {
             --bg: #0f172a;
             --card-bg: #1e293b;
             --card-border: #334155;
             --primary: #38bdf8;
-            --primary-glow: rgba(56, 189, 248, 0.15);
             --success: #10b981;
             --accent: #f59e0b;
             --text-main: #f8fafc;
@@ -161,8 +160,8 @@
 
 <div class="dashboard">
     <div class="header">
-        <h2>📊 ChitFund Non-Prized Member Profit Analyzer</h2>
-        <p>Calculate exact monthwise dividends, net monthly contribution, and cumulative profit for non-withdrawn members.</p>
+        <h2>📊 ChitFund Non-Prized Member Cumulative Profit Calculator</h2>
+        <p>Calculate exact monthwise dividends, net monthly contribution, and cumulative running profit for non-withdrawn members.</p>
     </div>
 
     <!-- Input Parameter Panel -->
@@ -207,7 +206,7 @@
     <!-- Results Table -->
     <div class="results-section">
         <div class="panel-title">
-            <span>Monthwise Profit & Contribution Schedule</span>
+            <span>Monthwise Cumulative Profit & Contribution Schedule</span>
             <span id="rowCount" style="font-size:0.75rem; color: var(--text-muted);"></span>
         </div>
         <div id="tableContainer">
@@ -230,10 +229,6 @@
 
         var totalPot = monthlyAmt * months;
         var foremanCommPerMonth = totalPot * (commPercent / 100) / months;
-        
-        // Net discount available for distribution among members after foreman commission
-        // Alternatively, if discount already includes commission, or commission is taken from total pot:
-        // Standard auction chit: Net Dividend = (Discount - Commission) / Total Members
         var netDiscountForMembers = Math.max(0, discount - foremanCommPerMonth);
         var dividendPerMember = netDiscountForMembers / months;
 
@@ -252,7 +247,7 @@
                     <th>Total Discount (₹)</th>
                     <th>Member Dividend (₹)</th>
                     <th>Net Paid by Non-Prized (₹)</th>
-                    <th>Monthly Profit (₹)</th>
+                    <th>Cumulative Profit (₹)</th>
                 </tr>
             </thead>
             <tbody>`;
@@ -271,7 +266,7 @@
                 <td>₹${discount.toLocaleString('en-IN')}</td>
                 <td style="color: var(--success); font-weight:600;">+ ₹${dividendPerMember.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
                 <td>₹${netPaid.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
-                <td style="color: var(--primary); font-weight:700;">₹${monthlyProfit.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
+                <td style="color: var(--primary); font-weight:700;">₹${cumulativeProfit.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
             </tr>`;
         }
 
