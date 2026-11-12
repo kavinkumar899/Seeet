@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chit Profit Calculator</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0f172a,#1e293b,#312e81);
+    min-height:100vh;
+    color:white;
+    padding:30px;
+}
+
+.container{
+    max-width:1400px;
+    margin:auto;
+}
+
+.title{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.title h1{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.title p{
+    opacity:.8;
+}
+
+.card{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:15px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.input-group label{
+    margin-bottom:8px;
+    font-size:14px;
+    opacity:.9;
+}
+
+.input-group input{
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,.12);
+    color:white;
+    font-size:16px;
+}
+
+.input-group input::placeholder{
+    color:#ddd;
+}
+
+.btn{
+    padding:14px 24px;
+    border:none;
+    border-radius:12px;
+    background:#4f46e5;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.btn:hover{
+    background:#6366f1;
+    transform:translateY(-2px);
+}
+
+.month-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:12px;
+    padding:15px;
+    border-radius:12px;
+    background:rgba(255,255,255,.05);
+}
+
+.month-row input{
+    width:120px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.stat-card{
+    background:rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:25px;
+    text-align:center;
+}
+
+.stat-card h3{
+    font-size:14px;
+    opacity:.8;
+    margin-bottom:6px;
+}
+
+.stat-card h2{
+    color:#60a5fa;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th{
+    background:#4f46e5;
+    padding:12px;
+}
+
+td{
+    background:rgba(255,255,255,.05);
+    padding:10px;
+    text-align:center;
+}
+
+tr:nth-child(even) td{
+    background:rgba(255,255,255,.08);
+}
+
+.member-table{
+    overflow:auto;
+}
+
+.success{
+    color:#4ade80;
+}
+
+@media(max-width:700px){
+    .month-row{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="title">
+    <h1>💰 Chit Profit Calculator</h1>
+    <p>Offline Chit Management & Profit Analysis</p>
+</div>
+
+<div class="card">
+    <div class="grid">
+
+        <div class="input-group">
+            <label>Monthly Amount</label>
+            <input type="number" id="monthlyAmount" value="10000">
+        </div>
+
+        <div class="input-group">
+            <label>Number of Months / Members</label>
+            <input type="number" id="months" value="20">
+        </div>
+
+        <div class="input-group">
+            <label>Monthly Discount</label>
+            <input type="number" id="discount" value="30000">
+        </div>
+
+        <div class="input-group">
+            <label>Commission %</label>
+            <input type="number" id="commission" value="5">
+        </div>
+
+    </div>
+
+    <br>
+
+    <button class="btn" onclick="generateMonths()">
+        Generate Winner Entries
+    </button>
+
+</div>
+
+<div id="winnersSection
