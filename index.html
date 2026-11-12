@@ -1,219 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChitFund Pro - Monthwise Non-Prized Member Profit Calculator</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.15);
+            --success: #10b981;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --input-bg: #0f172a;
+        }
 
-<title>Chit Profit Calculator</title>
+        * { box-sizing: border-box; color-scheme: dark; }
 
-<style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 12px;
+            display: flex;
+            justify-content: center;
+        }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+        .dashboard {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        }
 
-body{
-    font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,#0f172a,#1e293b,#312e81);
-    min-height:100vh;
-    color:white;
-    padding:30px;
-}
+        .header { text-align: center; margin-bottom: 24px; }
+        .header h2 { margin: 0; font-size: 1.6rem; color: var(--primary); font-weight: 800; }
+        .header p { margin: 6px 0 0 0; font-size: 0.85rem; color: var(--text-muted); }
 
-.container{
-    max-width:1400px;
-    margin:auto;
-}
+        .input-panel {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            align-items: flex-end;
+        }
 
-.title{
-    text-align:center;
-    margin-bottom:30px;
-}
+        .input-group { display: flex; flex-direction: column; }
+        .input-group label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
 
-.title h1{
-    font-size:42px;
-    margin-bottom:10px;
-}
+        .input-group input {
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
 
-.title p{
-    opacity:.8;
-}
+        .calc-btn {
+            background: var(--success);
+            color: #0f172a;
+            border: none;
+            padding: 11px 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            height: 42px;
+        }
+        .calc-btn:hover { opacity: 0.9; }
 
-.card{
-    background:rgba(255,255,255,.08);
-    backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,.1);
-    border-radius:20px;
-    padding:25px;
-    margin-bottom:25px;
-}
+        .results-section {
+            background: #0f172a;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 18px;
+            overflow-x: auto;
+        }
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:15px;
-}
+        .panel-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+        }
 
-.input-group{
-    display:flex;
-    flex-direction:column;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            text-align: left;
+        }
 
-.input-group label{
-    margin-bottom:8px;
-    font-size:14px;
-    opacity:.9;
-}
+        th, td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--card-border);
+        }
 
-.input-group input{
-    padding:12px;
-    border:none;
-    border-radius:12px;
-    background:rgba(255,255,255,.12);
-    color:white;
-    font-size:16px;
-}
+        th {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(30, 41, 59, 0.5);
+        }
 
-.input-group input::placeholder{
-    color:#ddd;
-}
+        tr:hover td { background: rgba(56, 189, 248, 0.04); }
 
-.btn{
-    padding:14px 24px;
-    border:none;
-    border-radius:12px;
-    background:#4f46e5;
-    color:white;
-    cursor:pointer;
-    font-size:15px;
-    font-weight:bold;
-    transition:.3s;
-}
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
 
-.btn:hover{
-    background:#6366f1;
-    transform:translateY(-2px);
-}
+        .summary-card {
+            background: #0f172a;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
 
-.month-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-    margin-bottom:12px;
-    padding:15px;
-    border-radius:12px;
-    background:rgba(255,255,255,.05);
-}
+        .summary-card span { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+        .summary-card strong { font-size: 1.15rem; color: var(--success); }
 
-.month-row input{
-    width:120px;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.stat-card{
-    background:rgba(255,255,255,.08);
-    border-radius:16px;
-    padding:25px;
-    text-align:center;
-}
-
-.stat-card h3{
-    font-size:14px;
-    opacity:.8;
-    margin-bottom:6px;
-}
-
-.stat-card h2{
-    color:#60a5fa;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:15px;
-}
-
-th{
-    background:#4f46e5;
-    padding:12px;
-}
-
-td{
-    background:rgba(255,255,255,.05);
-    padding:10px;
-    text-align:center;
-}
-
-tr:nth-child(even) td{
-    background:rgba(255,255,255,.08);
-}
-
-.member-table{
-    overflow:auto;
-}
-
-.success{
-    color:#4ade80;
-}
-
-@media(max-width:700px){
-    .month-row{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-}
-
-</style>
+        .detail-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-
-<div class="title">
-    <h1>💰 Chit Profit Calculator</h1>
-    <p>Offline Chit Management & Profit Analysis</p>
-</div>
-
-<div class="card">
-    <div class="grid">
-
-        <div class="input-group">
-            <label>Monthly Amount</label>
-            <input type="number" id="monthlyAmount" value="10000">
-        </div>
-
-        <div class="input-group">
-            <label>Number of Months / Members</label>
-            <input type="number" id="months" value="20">
-        </div>
-
-        <div class="input-group">
-            <label>Monthly Discount</label>
-            <input type="number" id="discount" value="30000">
-        </div>
-
-        <div class="input-group">
-            <label>Commission %</label>
-            <input type="number" id="commission" value="5">
-        </div>
-
+<div class="dashboard">
+    <div class="header">
+        <h2>📊 ChitFund Non-Prized Member Profit Analyzer</h2>
+        <p>Calculate exact monthwise dividends, net monthly contribution, and cumulative profit for non-withdrawn members.</p>
     </div>
 
-    <br>
+    <!-- Input Parameter Panel -->
+    <div class="input-panel">
+        <div class="input-group">
+            <label>Monthly Installment (₹)</label>
+            <input type="number" id="monthlyAmount" value="10000" min="500" step="500">
+        </div>
+        <div class="input-group">
+            <label>Total Duration (Months)</label>
+            <input type="number" id="totalMonths" value="20" min="2" max="60">
+        </div>
+        <div class="input-group">
+            <label>Discount Amount / Month (₹)</label>
+            <input type="number" id="discountAmount" value="2000" min="0" step="100">
+        </div>
+        <div class="input-group">
+            <label>Foreman Commission (%)</label>
+            <input type="number" id="foremanCommPercent" value="5" min="0" max="20" step="0.5">
+        </div>
+        <div>
+            <button class="calc-btn" onclick="calculateChit()">Calculate Profit</button>
+        </div>
+    </div>
 
-    <button class="btn" onclick="generateMonths()">
-        Generate Winner Entries
-    </button>
+    <!-- Summary Metrics -->
+    <div class="summary-cards" id="summaryCards" style="display: none;">
+        <div class="summary-card">
+            <span>Total Pot Value</span>
+            <strong id="sumPot" style="color: var(--primary);">₹0</strong>
+        </div>
+        <div class="summary-card">
+            <span>Foreman Commission / Mo</span>
+            <strong id="sumComm" style="color: var(--accent);">₹0</strong>
+        </div>
+        <div class="summary-card">
+            <span>Total Dividend / Member / Mo</span>
+            <strong id="sumDividend">₹0</strong>
+        </div>
+    </div>
 
+    <!-- Results Table -->
+    <div class="results-section">
+        <div class="panel-title">
+            <span>Monthwise Profit & Contribution Schedule</span>
+            <span id="rowCount" style="font-size:0.75rem; color: var(--text-muted);"></span>
+        </div>
+        <div id="tableContainer">
+            <div class="detail-placeholder">Enter your chit parameters above and click <strong>"Calculate Profit"</strong>.</div>
+        </div>
+    </div>
 </div>
 
-<div id="winnersSection
+<script>
+    function calculateChit() {
+        var monthlyAmt = parseFloat(document.getElementById('monthlyAmount').value) || 0;
+        var months = parseInt(document.getElementById('totalMonths').value) || 0;
+        var discount = parseFloat(document.getElementById('discountAmount').value) || 0;
+        var commPercent = parseFloat(document.getElementById('foremanCommPercent').value) || 0;
+
+        if (monthlyAmt <= 0 || months <= 0) {
+            alert('Please enter valid positive numbers for monthly amount and total months.');
+            return;
+        }
+
+        var totalPot = monthlyAmt * months;
+        var foremanCommPerMonth = totalPot * (commPercent / 100) / months;
+        
+        // Net discount available for distribution among members after foreman commission
+        // Alternatively, if discount already includes commission, or commission is taken from total pot:
+        // Standard auction chit: Net Dividend = (Discount - Commission) / Total Members
+        var netDiscountForMembers = Math.max(0, discount - foremanCommPerMonth);
+        var dividendPerMember = netDiscountForMembers / months;
+
+        // Show summary cards
+        document.getElementById('summaryCards').style.display = 'grid';
+        document.getElementById('sumPot').textContent = '₹' + totalPot.toLocaleString('en-IN');
+        document.getElementById('sumComm').textContent = '₹' + foremanCommPerMonth.toLocaleString('en-IN', {maximumFractionDigits: 2});
+        document.getElementById('sumDividend').textContent = '₹' + dividendPerMember.toLocaleString('en-IN', {maximumFractionDigits: 2});
+
+        var html = `<table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Gross Installment (₹)</th>
+                    <th>Foreman Comm. (₹)</th>
+                    <th>Total Discount (₹)</th>
+                    <th>Member Dividend (₹)</th>
+                    <th>Net Paid by Non-Prized (₹)</th>
+                    <th>Monthly Profit (₹)</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        var cumulativeProfit = 0;
+
+        for (var m = 1; m <= months; m++) {
+            var netPaid = monthlyAmt - dividendPerMember;
+            var monthlyProfit = dividendPerMember;
+            cumulativeProfit += monthlyProfit;
+
+            html += `<tr>
+                <td><strong>Month ${m}</strong></td>
+                <td>₹${monthlyAmt.toLocaleString('en-IN')}</td>
+                <td>₹${foremanCommPerMonth.toLocaleString('en-IN', {maximumFractionDigits: 1})}</td>
+                <td>₹${discount.toLocaleString('en-IN')}</td>
+                <td style="color: var(--success); font-weight:600;">+ ₹${dividendPerMember.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
+                <td>₹${netPaid.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
+                <td style="color: var(--primary); font-weight:700;">₹${monthlyProfit.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
+            </tr>`;
+        }
+
+        html += `</tbody></table>`;
+
+        document.getElementById('tableContainer').innerHTML = html;
+        document.getElementById('rowCount').textContent = months + ' Months Total Schedule';
+    }
+
+    // Auto-calculate on load
+    window.onload = function() {
+        calculateChit();
+    };
+</script>
+
+</body>
+</html>
+
