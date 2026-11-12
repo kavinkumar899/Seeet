@@ -30,7 +30,7 @@
 
         .dashboard {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1250px;
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 20px;
@@ -160,15 +160,15 @@
 
 <div class="dashboard">
     <div class="header">
-        <h2>📊 ChitFund Non-Prized Member Cumulative Profit Calculator</h2>
-        <p>Calculate exact monthwise dividends, net monthly contribution, and cumulative running profit for non-withdrawn members.</p>
+        <h2>📊 ChitFund Pro - Cumulative Profit Calculator</h2>
+        <p>Commission calculated on payout amount (Total Pot minus Discount), with running cumulative member profit.</p>
     </div>
 
     <!-- Input Parameter Panel -->
     <div class="input-panel">
         <div class="input-group">
             <label>Monthly Installment (₹)</label>
-            <input type="number" id="monthlyAmount" value="10000" min="500" step="500">
+            <input type="number" id="monthlyAmount" value="25000" min="500" step="500">
         </div>
         <div class="input-group">
             <label>Total Duration (Months)</label>
@@ -176,7 +176,7 @@
         </div>
         <div class="input-group">
             <label>Discount Amount / Month (₹)</label>
-            <input type="number" id="discountAmount" value="2000" min="0" step="100">
+            <input type="number" id="discountAmount" value="110000" min="0" step="500">
         </div>
         <div class="input-group">
             <label>Foreman Commission (%)</label>
@@ -194,19 +194,23 @@
             <strong id="sumPot" style="color: var(--primary);">₹0</strong>
         </div>
         <div class="summary-card">
-            <span>Foreman Commission / Mo</span>
-            <strong id="sumComm" style="color: var(--accent);">₹0</strong>
+            <span>Prized Payout Amount</span>
+            <strong id="sumPayout" style="color: var(--accent);">₹0</strong>
         </div>
         <div class="summary-card">
-            <span>Total Dividend / Member / Mo</span>
-            <strong id="sumDividend">₹0</strong>
+            <span>Foreman Commission</span>
+            <strong id="sumComm">₹0</strong>
+        </div>
+        <div class="summary-card">
+            <span>Net Dividend / Member</span>
+            <strong id="sumDividend" style="color: var(--success);">₹0</strong>
         </div>
     </div>
 
     <!-- Results Table -->
     <div class="results-section">
         <div class="panel-title">
-            <span>Monthwise Cumulative Profit & Contribution Schedule</span>
+            <span>Monthwise Cumulative Profit Schedule</span>
             <span id="rowCount" style="font-size:0.75rem; color: var(--text-muted);"></span>
         </div>
         <div id="tableContainer">
@@ -228,14 +232,18 @@
         }
 
         var totalPot = monthlyAmt * months;
-        var foremanCommPerMonth = totalPot * (commPercent / 100) / months;
-        var netDiscountForMembers = Math.max(0, discount - foremanCommPerMonth);
-        var dividendPerMember = netDiscountForMembers / months;
+        var prizedPayout = Math.max(0, totalPot - discount);
+        var foremanCommission = prizedPayout * (commPercent / 100);
+        
+        // Total surplus available for non-prized member distribution = Discount - Foreman Commission
+        var netSurplusForMembers = Math.max(0, discount - foremanCommission);
+        var dividendPerMember = netSurplusForMembers / months;
 
         // Show summary cards
         document.getElementById('summaryCards').style.display = 'grid';
         document.getElementById('sumPot').textContent = '₹' + totalPot.toLocaleString('en-IN');
-        document.getElementById('sumComm').textContent = '₹' + foremanCommPerMonth.toLocaleString('en-IN', {maximumFractionDigits: 2});
+        document.getElementById('sumPayout').textContent = '₹' + prizedPayout.toLocaleString('en-IN', {maximumFractionDigits: 2});
+        document.getElementById('sumComm').textContent = '₹' + foremanCommission.toLocaleString('en-IN', {maximumFractionDigits: 2});
         document.getElementById('sumDividend').textContent = '₹' + dividendPerMember.toLocaleString('en-IN', {maximumFractionDigits: 2});
 
         var html = `<table>
@@ -243,8 +251,9 @@
                 <tr>
                     <th>Month</th>
                     <th>Gross Installment (₹)</th>
-                    <th>Foreman Comm. (₹)</th>
                     <th>Total Discount (₹)</th>
+                    <th>Prized Payout (₹)</th>
+                    <th>Foreman Comm. (₹)</th>
                     <th>Member Dividend (₹)</th>
                     <th>Net Paid by Non-Prized (₹)</th>
                     <th>Cumulative Profit (₹)</th>
@@ -262,8 +271,9 @@
             html += `<tr>
                 <td><strong>Month ${m}</strong></td>
                 <td>₹${monthlyAmt.toLocaleString('en-IN')}</td>
-                <td>₹${foremanCommPerMonth.toLocaleString('en-IN', {maximumFractionDigits: 1})}</td>
                 <td>₹${discount.toLocaleString('en-IN')}</td>
+                <td>₹${prizedPayout.toLocaleString('en-IN')}</td>
+                <td>₹${foremanCommission.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
                 <td style="color: var(--success); font-weight:600;">+ ₹${dividendPerMember.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
                 <td>₹${netPaid.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
                 <td style="color: var(--primary); font-weight:700;">₹${cumulativeProfit.toLocaleString('en-IN', {maximumFractionDigits: 2})}</td>
